@@ -5,16 +5,19 @@ import scipy.constants as sc
 import numpy as np
 import matplotlib.pyplot as plt
 
+# For Arguments from users
 parser = argparse.ArgumentParser()
 parser.add_argument('weight', type=float,nargs='+')
 parser.add_argument('slip', type=float)
 parser.add_argument('mu', type=float)
 args = parser.parse_args()
 
+# Declaration of inputs
 mass=args.weight
 alpha=args.slip
 mu=args.mu
 
+# Reading constants from csv
 table = pd.read_csv('resources/table_Code.csv', index_col=0)
 a1_x=table.loc['a1', 'Fx']
 a2_x=table.loc['a2', 'Fx']
@@ -25,9 +28,11 @@ a6_x=table.loc['a6', 'Fx']
 a7_x=table.loc['a7', 'Fx']
 a8_x=table.loc['a8', 'Fx']
 
+# Declaring constants required for Brake force
 C=1.65
 g=sc.g
 
+# Calculation and plot of Brake force vs slip
 for m in mass:
     Fz = (m * g) / 4
     Dx = a1_x * Fz**2 + a2_x
@@ -54,6 +59,7 @@ plt.title('Side force and brake force vs longitudinal')
 plt.legend()
 plt.grid(True)
 
+# Reading constants required for side force from csv
 a1_y=table.loc['a1', 'Fy']
 a2_y=table.loc['a2', 'Fy']
 a3_y=table.loc['a3', 'Fy']
@@ -68,9 +74,11 @@ a11_y = table.loc['a11', 'Fy']
 a12_y = table.loc['a12', 'Fy']
 a13_y = table.loc['a13', 'Fy']
 
-
+# Declaring constants required for Side force
 CY = 1.30
 Y=0
+
+# Calculation and plot of Side force vs Slip
 for m in mass:
     Fz = (m * g) / 4
     Dy = a1_y * Fz**2 + a2_y * Fz
