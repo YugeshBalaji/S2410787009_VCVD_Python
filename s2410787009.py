@@ -35,7 +35,7 @@ phi=sc.pi
 
 # Calculation and plot of Brake force vs slip
 for m in mass:
-    Fz = (m * g) / 4
+    Fz = (m * g) / 4000
     Dx = a1_x * Fz**2 + a2_x*Fz
     Ex = a6_x * Fz**2 + a7_x * Fz + a8_x
     Bx = (a3_x * Fz**2 + a4_x * Fz) / (C * Dx * math.exp(a5_x * Fz))
@@ -76,7 +76,7 @@ Y=0
 
 # Calculation and plot of Side force vs Slip
 for m in mass:
-    Fz = (m * g) / 4
+    Fz = (m * g) / 4000
     Dy = a1_y * Fz**2 + a2_y * Fz
     Ey = a6_y * Fz**2 + a7_y * Fz + a8_y
     By= (a3_y*np.sin(a4_y*math.atan(a5_y*Fz)))/(CY*Dy)
