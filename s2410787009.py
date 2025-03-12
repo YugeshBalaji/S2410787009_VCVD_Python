@@ -31,11 +31,12 @@ a8_x=table.loc['a8', 'Fx']
 # Declaring constants required for Brake force
 C=1.65
 g=sc.g
+phi=sc.pi
 
 # Calculation and plot of Brake force vs slip
 for m in mass:
     Fz = (m * g) / 4
-    Dx = a1_x * Fz**2 + a2_x
+    Dx = a1_x * Fz**2 + a2_x*Fz
     Ex = a6_x * Fz**2 + a7_x * Fz + a8_x
     Bx = (a3_x * Fz**2 + a4_x * Fz) / (C * Dx * math.exp(a5_x * Fz))
 
@@ -43,12 +44,12 @@ for m in mass:
     k_Int = []
 
     for i in range(0, 101):
-        phi_value = (1-Ex)*i+(Ex/Bx)*math.atan(Bx*i)
+        phi_value = (1-Ex)*i+(Ex/Bx)*math.atan(Bx*i)*180/phi
         Sigma_x=-i/(1+i)
-        Sigma_y=-math.tan(alpha)/(1+i)
+        Sigma_y=-math.tan(alpha*phi/180)/(1+i)
         Overall_Sigma=math.sqrt(Sigma_x**2+Sigma_y**2)
         fx = Dx * math.sin(C * math.atan(Bx * phi_value))
-        fx = -(Sigma_x/Overall_Sigma)*fx
+        fx = -(Sigma_x/Overall_Sigma)*mu*fx
 
         Fx_Int.append(fx)
         k_Int.append(i)
@@ -68,11 +69,6 @@ a5_y=table.loc['a5', 'Fy']
 a6_y=table.loc['a6', 'Fy']
 a7_y=table.loc['a7', 'Fy']
 a8_y=table.loc['a8', 'Fy']
-a9_y = table.loc['a9', 'Fy']
-a10_y = table.loc['a10', 'Fy']
-a11_y = table.loc['a11', 'Fy']
-a12_y = table.loc['a12', 'Fy']
-a13_y = table.loc['a13', 'Fy']
 
 # Declaring constants required for Side force
 CY = 1.30
@@ -83,17 +79,19 @@ for m in mass:
     Fz = (m * g) / 4
     Dy = a1_y * Fz**2 + a2_y * Fz
     Ey = a6_y * Fz**2 + a7_y * Fz + a8_y
-    deltaSh = a9_y * Y
-    deltaSv = (a10_y * Fz**2 + a11_y * Fz) * Y
-    By= (a3_y*np.sin(a4_y*math.atan(a5_y*Fz)))/(CY*Dy)*(1-a12_y*abs(Y))
+    By= (a3_y*np.sin(a4_y*math.atan(a5_y*Fz)))/(CY*Dy)
     Fy_Int = []
+    k_Int = []
 
-    for k in range(0,101):
+    for i in range(0,101):
         Sigma_x=-i/(1+i)
-        Sigma_y=-math.tan(alpha)/(1+i)
+        Sigma_y=-math.tan(alpha*phi/180)/(1+i)
         Overall_Sigma=math.sqrt(Sigma_x**2+Sigma_y**2)
-        phi_y=(1-Ey)*(k+deltaSv)+(Ey/By)*math.atan(By*(k+deltaSh))
-        Fy = Dy * np.sin(CY * math.atan(By * phi_y)) + deltaSv
+        phi_y=(1-Ey)*alpha+(Ey/By)*math.atan(By*(alpha*phi/180))
+        Fy = Dy * np.sin(CY * math.atan(By * phi_y))
+        Fy = -(Sigma_y/Overall_Sigma)*mu*Fy
         Fy_Int.append(Fy)
+        k_Int.append(i)
+
     plt.plot(k_Int, Fy_Int, label=f'alpha = {alpha}', linestyle=':')
 plt.show()
